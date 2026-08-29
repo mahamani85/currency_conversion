@@ -1,0 +1,9 @@
+**/.git
+**/.gitignore
+**/.idea
+**/.settings
+**/.project
+**/.classpath
+**/.factorypath
+target/
+*.log

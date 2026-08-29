@@ -22,9 +22,6 @@ services:
   # Spring Boot Backend Service
   backend:
     image: currency-app:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
     container_name: currency-app
     restart: always
     depends_on:

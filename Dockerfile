@@ -2,13 +2,12 @@
 FROM maven:3.8.6-openjdk-11-slim AS build
 WORKDIR /app
 
-# Copy pom.xml and pre-download dependencies for faster cached builds
+# Copy source and pom together
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
-# Copy source code and build package
 COPY src ./src
-RUN mvn clean package -DskipTests
+
+# Fast build without hanging transfer progress logs
+RUN mvn clean package -DskipTests -B --no-transfer-progress
 
 # Stage 2: Minimal runtime image
 FROM eclipse-temurin:11-jre

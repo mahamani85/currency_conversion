@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@master
@@ -19,16 +19,35 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
+          script_stop: true
           script: |
-            # 1. Navigate to the project directory on EC2
-            cd currency_conversion/currency-conversion || cd backend || cd ~/currency-conversion
+            echo "Connected to EC2 successfully as $(whoami)"
 
-            # 2. Pull latest code from GitHub
+            # Check if directory exists, if not clone it
+            if [ ! -d "currency_conversion" ] && [ ! -d "currency-conversion" ] && [ ! -d "backend" ]; then
+              echo "Repository not found, cloning..."
+              git clone https://github.com/mahamani85/currency_conversion.git
+            fi
+
+            # Navigate to the project directory
+            if [ -d "currency_conversion/currency-conversion" ]; then
+              cd currency_conversion/currency-conversion
+            elif [ -d "currency_conversion" ]; then
+              cd currency_conversion
+            elif [ -d "currency-conversion" ]; then
+              cd currency-conversion
+            elif [ -d "backend" ]; then
+              cd backend
+            fi
+
+            echo "Current Directory: $(pwd)"
+
+            # Pull latest changes
             git pull origin master
 
-            # 3. Build and restart containers using Docker Compose
+            # Run Docker Compose
             docker compose up -d --build
 
-            # 4. Clean up unused old Docker images
+            # Prune dangling images
             docker image prune -f
 

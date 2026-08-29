@@ -45,8 +45,11 @@ jobs:
             # Pull latest changes
             git pull origin master
 
+            # Build Spring Boot Docker image directly
+            docker build -t currency-app:latest .
+
             # Run Docker Compose
-            docker compose up -d --build
+            docker compose up -d
 
             # Prune dangling images
             docker image prune -f

@@ -21,6 +21,7 @@ services:
 
   # Spring Boot Backend Service
   backend:
+    image: currency-app:latest
     build:
       context: .
       dockerfile: Dockerfile

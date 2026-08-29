@@ -22,6 +22,12 @@ public class CurrencyController {
     @Autowired
     private CurrencyConversionService service;
 
+    @RequestMapping("/hi")
+    public String getSayhi()
+    {
+       return "Mahamani" ;
+    }
+
     @Operation(
         summary = "Convert currency",
         description = "Converts a given amount from one currency to another using live rates from CurrencyBeacon. " +
